@@ -1,0 +1,72 @@
+from fastapi import HTTPException
+
+PasswordUpperCaseException = HTTPException(
+    status_code=400,
+    detail='Пароль должен содержать минимум одну букву верхнего регистра [Eng]'
+)
+
+PasswordLowerCaseException = HTTPException(
+    status_code=400,
+    detail='Пароль должен содержать минимум одну букву нижнего регистра [Eng]'
+)
+
+PasswordNumException = HTTPException(
+    status_code=400,
+    detail='Пароль должен содержать минимум одну цифру'
+)
+
+PasswordCharException = HTTPException(
+    status_code=400,
+    detail='Пароль должен содержать минимум один спец символ'
+)
+
+PasswordLengthException = HTTPException(
+    status_code=400,
+    detail='Пароль должен быть не менее 12 и не более 30 символов'
+)
+
+PasswordNotAsciiException = HTTPException(
+    status_code=400,
+    detail='Пароль должен содержать только печатаемые символы'
+)
+
+OldPasswordIncorrectException = HTTPException(
+    status_code=400,
+    detail='Старый пароль неверен'
+)
+
+PasswordsMatchException = HTTPException(
+    status_code=400,
+    detail='Старый и новый пароль должны отличаться'
+)
+
+
+IncorrectJWTException = HTTPException(
+    status_code=401,
+    detail='Токен невалиден'
+)
+
+ExpireJWTException = HTTPException(
+    status_code=401,
+    detail='Токен истёк'
+)
+
+JWTNotFound = HTTPException(
+    status_code=401,
+    detail='Токен не найден'
+)
+
+EmailAlreadyException = HTTPException(
+    status_code=409,
+    detail='Почта уже зарегистрирована'
+)
+
+EmailOrPasswordIncorrectException = HTTPException(
+    status_code=401,
+    detail='Неверная почта или пароль'
+)
+
+NotFoundException = HTTPException(
+    status_code=404,
+    detail='Not Found'
+)

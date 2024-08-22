@@ -1,0 +1,10 @@
+postgres_url=postgresql+asyncpg://user:password@postgres:5432/example
+hostname=localhost
+secret_key=secret
+algorithm=HS256
+smtp_host=smtp
+smtp_port=port
+smtp_mail=mail
+smtp_pass=pass
+
+#Продублируйте файл, настройте и укажите переменные
