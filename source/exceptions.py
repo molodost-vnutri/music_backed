@@ -70,3 +70,28 @@ NotFoundException = HTTPException(
     status_code=404,
     detail='Not Found'
 )
+
+MusicAlreadyExistException = HTTPException(
+    status_code=409,
+    detail='Данная музыка уже находиться в базе'
+)
+
+RollbackException = HTTPException(
+    status_code=500,
+    detail='Произошла ошибка, попробуйте снова'
+)
+
+GenreNotFoundException = HTTPException(
+    status_code=404,
+    detail='Такого жанра нет в сервисе'
+)
+
+FileNotEndswithException = HTTPException(
+    status_code=400,
+    detail='Файл не имеет расширения'
+)
+
+FileNotSupportedException = HTTPException(
+    status_code=400,
+    detail='Расширение таких файлов не поддерживаеться'
+)

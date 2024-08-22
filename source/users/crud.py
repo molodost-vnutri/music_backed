@@ -1,5 +1,7 @@
-from sqlalchemy import select
+from sqlalchemy import select, insert
+from pydantic import EmailStr
 
+from source.exceptions import RollbackException
 from source.database import async_session
 from source.Core import BaseCRUD
 from source.users.models import UserModel, RoleModel, UserRoles
@@ -11,9 +13,21 @@ class RoleCRUD(BaseCRUD):
 class UserRolesCRUD(BaseCRUD):
     model = UserRoles
 
+    @classmethod
+    async def model_insert(cls, session, **arg):
+        query = insert(cls.model).values(**arg).returning(cls.model.id)
+        result = await session.execute(query)
+        return result.scalar_one()
+
 class UserCRUD(BaseCRUD):
     model = UserModel
 
+    @classmethod
+    async def model_insert(cls, session, **arg):
+        query = insert(cls.model).values(**arg).returning(cls.model.id)
+        result = await session.execute(query)
+        return result.scalar_one()
+        
     @classmethod
     async def model_get_current_user(cls, model_id: int):
         async with async_session() as session:
@@ -37,3 +51,22 @@ class UserCRUD(BaseCRUD):
                 updated_at=user.updated_at.isoformat(),
                 roles=[role for role in roles]
             )
+
+    @classmethod
+    async def create_user_with_role(cls, email: EmailStr, hash_password: str):
+        async with async_session() as session:
+            try:
+                async with session.begin():
+                    user_id = await cls.model_insert(
+                        session=session,
+                        email=email,
+                        password=hash_password
+                    )
+
+                    await UserRolesCRUD.model_insert(
+                        session=session,
+                        user_id=user_id,
+                        role_id=1
+                    )
+            except:
+                raise RollbackException

@@ -3,11 +3,11 @@ from source.exceptions import EmailAlreadyException
 from source.smtp.models import SMTP_CreateFirst
 from source.jwt.models import JWTCreateFirst
 from source.users.schemes import SUserCreateFirst, SUserCreateSecond
-from source.users.crud import UserCRUD, UserRolesCRUD
+from source.users.crud import UserCRUD
 from source.users.services.password import hashed_password
 
 
-async def send_registration_link(request: 'SUserCreateFirst'):
+async def send_registration_link(request: SUserCreateFirst):
     if await UserCRUD.model_find_one(email=request.email):
         return
     token = JWTCreateFirst.create_access_token(token={'email': request.email}, minutes=15)
@@ -21,12 +21,4 @@ async def create_user_second(request: SUserCreateSecond, token: str):
     
     password = hashed_password(request.password)
     
-    user_id = await UserCRUD.model_insert(
-        email=payload.email,
-        password=password
-    )
-    
-    await UserRolesCRUD.model_insert(
-        user_id=user_id,
-        role_id=1
-    )
+    await UserCRUD.create_user_with_role(email=payload.email, hash_password=password)

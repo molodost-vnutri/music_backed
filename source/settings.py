@@ -1,4 +1,6 @@
+from pathlib import Path
 from typing import ClassVar
+
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import EmailStr, PositiveInt
@@ -16,3 +18,5 @@ class Settings(BaseSettings):
     model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(env_file='.env')
 
 settings = Settings()
+
+music_folder: Path = Path('music_folder')

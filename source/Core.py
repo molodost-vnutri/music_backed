@@ -12,7 +12,8 @@ from source.database import async_session
 from source.settings import settings
 from source.exceptions import (
     ExpireJWTException,
-    IncorrectJWTException
+    IncorrectJWTException,
+    FileNotEndswithException
 )
 
 class BaseCRUD:
@@ -105,3 +106,12 @@ class BaseSMTPClient:
                 client.sendmail(settings.smtp_mail, email, message.as_string())
         except:
             pass
+
+def invert_dict(data: dict) -> dict:
+    return {v: k for k, v in data.items()}
+
+def get_file_ext(text: str):
+    try:
+        return text.split('.').pop()
+    except:
+        raise FileNotEndswithException

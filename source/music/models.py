@@ -25,3 +25,8 @@ class MusicGenreModel(Base):
     genre_id = Column(Integer, ForeignKey('genres.id'))
 
     music = relationship('MusicModel', back_populates='genres')
+
+class MusicEndModel(Base):
+    __tablename__ = 'file_end'
+    id = Column(Integer, primary_key=True)
+    file_end = Column(String, unique=True)
