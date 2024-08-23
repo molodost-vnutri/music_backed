@@ -32,7 +32,7 @@ async def upload_music_router(
     file: UploadFile = File(...),
     _=Depends(check_current_admin)
 ):
-    await upload_music(name=name, albom=albom, artist=artist, genre=genre, file=file)
+    await upload_music(name=name.lower(), albom=albom.lower(), artist=artist.lower(), genre=genre.lower(), file=file)
     return {
         'message': 'Музыка успешно загружена'
     }

@@ -32,22 +32,22 @@ class MusicCRUD(BaseCRUD):
             return musics
     
     @classmethod
-    async def model_music_insert(cls, name, albom, artist, genre, path):
+    async def model_music_insert(cls, name, albom, artist, path, id_, hash):
         async with async_session() as session:
             try:
                 async with session.begin():
-                    genres = await GenreCRUD.model_find_all()
                     music_id = await cls.model_insert(
                         session=session,
                         name=name,
                         albom=albom,
                         artist=artist,
-                        path=path
-                        )
-                    await MusicGenreCRUD.model_insert(session=session, music_id=music_id, genre_id=1)
-            except Exception as e:
-                print(e)
+                        path=path,
+                        hash=hash
+                    )
+                    await MusicGenreCRUD.model_insert(session=session, music_id=music_id, genre_id=id_)
+            except:
                 raise RollbackException
+
 
                     
 
