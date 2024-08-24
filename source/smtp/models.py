@@ -15,19 +15,19 @@ class SMTP_ChangeFirst(BaseSMTPClient):
     body = SEND_FIRST_CHANGE_EMAIL
     subject = 'Смена почты на сервисе'
     def __init__(self, token: str, email: EmailStr):
-        self.body.format(settings.hostname, token)
+        self.body = self.body.format(settings.hostname, token)
         self.send_mail(email=email, body=self.body, subject=self.subject)
 
 class SMTP_ChangeSecond(BaseSMTPClient):
     body = SEND_SECOND_CHANGE_EMAIL
     subject = 'Смена почты на сервисе'
     def __init__(self, token: str, email: EmailStr):
-        self.body.format(settings.hostname, token)
+        self.body = self.body.format(settings.hostname, token)
         self.send_mail(email=email, body=self.body, subject=self.subject)
 
 class SMTP_ChangePassword(BaseSMTPClient):
     body = SEND_FORGOT_PASSWORD_USER
     subject = 'Смена пароля на сервисе'
     def __init__(self, token: str, email: EmailStr):
-        self.body.format(settings.hostname, token)
+        self.body = self.body.format(settings.hostname, token)
         self.send_mail(email=email, body=self.body, subject=self.subject)

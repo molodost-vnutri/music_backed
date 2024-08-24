@@ -4,14 +4,17 @@ from pydantic import EmailStr
 from source.exceptions import RollbackException
 from source.database import async_session
 from source.Core import BaseCRUD
-from source.users.models import UserModel, RoleModel, UserRoles
+from source.users.models import UserModel, RoleModel, UserRolesModel, UserMusicsModel
 from source.users.schemes import SUserInformation
+
+class UserMusicCRUD(BaseCRUD):
+    model = UserMusicsModel
 
 class RoleCRUD(BaseCRUD):
     model = RoleModel
 
 class UserRolesCRUD(BaseCRUD):
-    model = UserRoles
+    model = UserRolesModel
 
     @classmethod
     async def model_insert(cls, session, **arg):
@@ -33,8 +36,8 @@ class UserCRUD(BaseCRUD):
         async with async_session() as session:
             query = (
                 select(cls.model, RoleModel.role)
-                .join(UserRoles, cls.model.id == UserRoles.user_id)
-                .join(RoleModel, UserRoles.role_id == RoleModel.id)
+                .join(UserRolesModel, cls.model.id == UserRolesModel.user_id)
+                .join(RoleModel, UserRolesModel.role_id == RoleModel.id)
                 .filter(cls.model.id == model_id)
             )
             

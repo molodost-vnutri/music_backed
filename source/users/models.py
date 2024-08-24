@@ -14,17 +14,26 @@ class UserModel(Base):
     created_at = Column(DateTime, default=datetime.now())
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
 
-    roles = relationship('UserRoles', back_populates='user', primaryjoin="and_(UserModel.id==UserRoles.user_id)")
+    roles = relationship('UserRolesModel', back_populates='user', primaryjoin="and_(UserModel.id==UserRolesModel.user_id)")
+    musics = relationship('UserMusicsModel', back_populates='user', primaryjoin='and_(UserModel.id==UserMusicsModel.user_id)')
 
 class RoleModel(Base):
     __tablename__ = 'roles'
     id = Column(Integer, primary_key=True)
     role = Column(String, unique=True)
 
-class UserRoles(Base):
+class UserRolesModel(Base):
     __tablename__ = 'user_roles'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     role_id = Column(Integer, ForeignKey('roles.id'))
 
     user = relationship('UserModel', back_populates='roles')
+
+class UserMusicsModel(Base):
+    __tablename__ = 'user_musics'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    music_id = Column(Integer, ForeignKey('musics.id'))
+
+    user = relationship('UserModel', back_populates='musics')

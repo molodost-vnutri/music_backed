@@ -12,7 +12,7 @@ from alembic import context
 
 from source.settings import settings
 from source.database import Base
-from source.users.models import UserModel, UserRoles, RoleModel
+from source.users.models import UserModel, UserRolesModel, RoleModel, UserMusicsModel
 from source.music.models import MusicGenreModel, MusicModel, GenreModel, MusicEndModel
 
 config = context.config

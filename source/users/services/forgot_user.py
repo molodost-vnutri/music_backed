@@ -18,4 +18,4 @@ async def change_password(token: str, request: SUserChangeForgotPassword):
     if not user_exist:
         raise UserNotFoundException
     password = hashed_password(request.new_password)
-    await UserCRUD.model_update(password=password)
+    await UserCRUD.model_update(model_id=user_exist.id, password=password)

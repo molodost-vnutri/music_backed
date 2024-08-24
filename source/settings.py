@@ -20,3 +20,6 @@ class Settings(BaseSettings):
 settings = Settings()
 
 music_folder: Path = Path('music_folder')
+
+if not music_folder.is_dir():
+    music_folder.mkdir()

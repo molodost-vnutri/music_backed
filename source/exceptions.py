@@ -110,3 +110,13 @@ UserAlreadyAuthException = HTTPException(
     status_code=400,
     detail='Выйдите из аккаунта для продолжения действий'
 )
+
+MusicNotFoundException = HTTPException(
+    status_code=404,
+    detail='Музыки с данным id не существует'
+)
+
+MusicAlreadyAddException = HTTPException(
+    status_code=409,
+    detail='Данная музыка у вас уже добавлена'
+)
