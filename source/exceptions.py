@@ -95,3 +95,18 @@ FileNotSupportedException = HTTPException(
     status_code=400,
     detail='Расширение таких файлов не поддерживаеться'
 )
+
+EmailNotFoundException = HTTPException(
+    status_code=404,
+    detail='Почта не зарегистрирована'
+)
+
+UserNotFoundException = HTTPException(
+    status_code=404,
+    detail='Пользователь удалён'
+)
+
+UserAlreadyAuthException = HTTPException(
+    status_code=400,
+    detail='Выйдите из аккаунта для продолжения действий'
+)

@@ -15,3 +15,6 @@ class JWTChangeEmailSecond(JWTCreateFirst):
 
 class JWTChangeEmailLast(JWTCreateFirst):
     pass
+
+class JWTChangePassword(JWTCreateFirst):
+    pass

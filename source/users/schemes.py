@@ -70,3 +70,25 @@ class SUserChangePassword(BaseModel):
     
 class SUserChangeEmail(BaseModel):
     new_email: EmailStr
+
+class SUserForgotPassword(SUserCreateFirst):
+    pass
+
+class SUserChangeForgotPassword(BaseModel):
+    new_password: str
+    
+    @field_validator('new_password')
+    def validation_passwords(cls, v: str) -> str:
+        if not v.isascii():
+            raise PasswordNotAsciiException
+        if not (12 <= len(v) <= 30):
+            raise PasswordLengthException
+        if not search(r'[a-z]', v):
+            raise PasswordLowerCaseException
+        if not search(r'[A-Z]', v):
+            raise PasswordUpperCaseException
+        if not search(r'[0-9]', v):
+            raise PasswordNumException
+        if not search(r'\W', v):
+            raise PasswordCharException
+        return v

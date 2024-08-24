@@ -8,7 +8,6 @@ EXPOSE 8000
 
 RUN python -m pip install --upgrade pip \
     && python -m pip install --no-cache-dir poetry \
-    && poetry install \
-    mkdir music_folder
+    && poetry install
 
 CMD ["poetry", "run", "uvicorn", "source.main:application", "--host", "0.0.0.0", "--reload"]

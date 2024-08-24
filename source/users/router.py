@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Response, Depends
-from source.users.schemes import SUserCreateFirst, SUserCreateSecond, SUserAuth, SUserChangePassword, SUserChangeEmail
+from source.users.schemes import SUserCreateFirst, SUserCreateSecond, SUserAuth, SUserChangePassword, SUserChangeEmail, SUserChangeForgotPassword, SUserForgotPassword
 from source.users.services.create_user import send_registration_link, create_user_second
 from source.users.services.auth_user import auth_current_user
-from source.users.services.dependencies import get_current_user
+from source.users.services.dependencies import get_current_user, check_unauth_user
+from source.users.services.forgot_user import change_password, forgot_password
 from source.users.services.current_user import (
     get_roles_current_user,
     change_username_current_user,
@@ -18,21 +19,21 @@ router = APIRouter(
 )
 
 @router.post('', status_code=200)
-async def create_user_first_router(request: SUserCreateFirst):
+async def create_user_first_router(request: SUserCreateFirst, _=Depends(check_unauth_user)):
     await send_registration_link(request=request)
     return {
         'message': 'Если почта существует, то на данные email будет отправлена ссылка для завершения регистрации'
     }
 
 @router.post('/verify/mail/{token}', status_code=201)
-async def create_user_second_router(token: str, request: SUserCreateSecond):
+async def create_user_second_router(token: str, request: SUserCreateSecond, _=Depends(check_unauth_user)):
     await create_user_second(token=token, request=request)
     return {
         'message': 'Почта успешно верифицирована'
     }
 
 @router.post('/auth', status_code=200)
-async def auth_user_router(request: SUserAuth, response: Response):
+async def auth_user_router(request: SUserAuth, response: Response, _=Depends(check_unauth_user)):
     token = await auth_current_user(request=request)
     response.set_cookie('access_token', token, httponly=True)
     return {
@@ -77,4 +78,18 @@ async def change_email_current_user_last_router(token: str, user_id = Depends(ge
     await change_email_current_user_last(token=token, user_id=user_id)
     return {
         'message': 'Почта успешно подтверждена'
+    }
+
+@router.post('/forgot/password', status_code=200)
+async def send_email_link_forgot_password_router(request: SUserForgotPassword, _=Depends(check_unauth_user)):
+    await forgot_password(request=request)
+    return {
+        'message': 'Письмо с ссылкой на смену пароля отправлено на почту'
+    }
+
+@router.patch('/forgot/{token}', status_code=200)
+async def verification_token_change_password_router(token: str, request: SUserChangeForgotPassword, _=Depends(check_unauth_user)):
+    await change_password(token=token, request=request)
+    return {
+        'message': 'Пароль изменён'
     }

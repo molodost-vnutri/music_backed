@@ -7,3 +7,5 @@ SEND_FIRST_CHANGE_EMAIL = '''Вы действительно хотите сме
 Ну раз так, то вот держите http://{}/profile/change/email/second/{}'''
 
 SEND_SECOND_CHANGE_EMAIL = '''Ваша ссылка на смену почты http://{}/profile/change/email/second/{}'''
+
+SEND_FORGOT_PASSWORD_USER = '''Ваша ссылка на сброс пароля http://{}/profile/forgot/{}'''
