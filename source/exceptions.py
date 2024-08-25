@@ -142,12 +142,12 @@ MusicAlreadyAddException = HTTPException(
     detail='Данная музыка у вас уже добавлена'
 )
 
-ModeratorNotBannedHeException = HTTPException(
+ModeratorNotBannedSelfException = HTTPException(
     status_code=400,
     detail='Модератор не может забанить себя'
 )
 
-ModeratorNotUnbannedHeException = HTTPException(
+ModeratorNotUnbannedSelfException = HTTPException(
     status_code=400,
     detail='Модератор не может разбанить себя'
 )
@@ -165,4 +165,9 @@ UserBannedException = HTTPException(
 FilterEmptyException = HTTPException(
     status_code=400,
     detail='query параметр не может быть пустым'
+)
+
+ModeratorNotDeleteSelfException = HTTPException(
+    status_code=400,
+    detail='Модератор не может удалить себя'
 )

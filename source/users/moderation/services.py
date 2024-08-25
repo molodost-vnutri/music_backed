@@ -3,7 +3,7 @@ from random import choice, choices, randint, shuffle
 
 from pydantic import PositiveInt, EmailStr
 
-from source.exceptions import ModeratorNotBannedHeException, NotHavePermissionException, UserNotExistException, ModeratorNotUnbannedHeException
+from source.exceptions import ModeratorNotBannedSelfException, NotHavePermissionException, UserNotExistException, ModeratorNotUnbannedSelfException, ModeratorNotDeleteSelfException
 from source.jwt.models import JWTChangeEmailModerator
 from source.users.services.password import get_password_hash
 from source.smtp.models import SMTP_ChangeEmailModerator
@@ -20,7 +20,7 @@ async def check_permission(model_id: PositiveInt):
 
 async def banned_user(model_id: PositiveInt, moderator_id: PositiveInt):
     if model_id == moderator_id:
-        raise ModeratorNotBannedHeException
+        raise ModeratorNotBannedSelfException
     await check_permission(model_id)
     await UserCRUD.model_update(model_id=model_id, banned=True)
     return {
@@ -29,7 +29,7 @@ async def banned_user(model_id: PositiveInt, moderator_id: PositiveInt):
 
 async def unbanned_user(model_id: PositiveInt, moderator_id: PositiveInt):
     if model_id == moderator_id:
-        raise ModeratorNotUnbannedHeException
+        raise ModeratorNotUnbannedSelfException
     await check_permission(model_id)
     await UserCRUD.model_update(model_id=model_id, banned=False)
     return {

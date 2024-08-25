@@ -86,11 +86,12 @@ class MusicCRUD(BaseCRUD):
     async def find_music_query(filter: SFilterMusic):
         async with async_session() as session:
             query = """
-                SELECT m.id, m.name, m.albom, m.artist
+                SELECT m.id, m.name, m.albom, m.artist, g.genre
                 FROM musics m
                 LEFT JOIN music_genres mg ON m.id = mg.music_id
                 LEFT JOIN genres g ON mg.genre_id = g.id
-                WHERE 1=1
+                WHERE 1=1;
+
             """
             if filter.name:
                 query += " AND m.name LIKE :name"
@@ -187,3 +188,16 @@ class MusicCRUD(BaseCRUD):
                     session.execute(query, {'genre': genre[0], 'genre_id': genre[1]})
                 await cls.model_update(session=session, model_id=model_id, **arg)
                 await session.commit()
+    
+    @staticmethod
+    async def get_music_by_id(model_id: PositiveInt):
+        async with async_session() as session:
+            query = text('''
+                SELECT m.id, m.name, m.albom, m.artist, m.path, g.genre
+                FROM musics m
+                LEFT JOIN music_genres mg ON m.id = mg.music_id
+                LEFT JOIN genres g ON mg.genre_id = g.id
+                WHERE m.id = :model_id;
+            ''')
+            row = await session.execute(query, {'model_id': model_id})
+            return row.fetchall()[0]

@@ -24,3 +24,9 @@ class SFilterMusic:
         self.name = name
         self.artist = artist
         self.albom = albom
+
+class SMusicOut(BaseModel):
+    name: str
+    albom: Optional[str]
+    artist: str
+    genre: str

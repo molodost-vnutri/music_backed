@@ -1,6 +1,7 @@
 from uuid import uuid4
 from typing import Optional
 from hashlib import md5
+from pathlib import Path
 from os import remove
 
 from fastapi import UploadFile
@@ -48,9 +49,8 @@ async def upload_music(name: str, albom: Optional[str], artist: str, genre: str,
 
 async def delete_music(music_id: PositiveInt):
     path = await MusicCRUD.model_delete(music_id=music_id)
-    file_path = music_folder.joinpath(path)
-    if file_path.is_file():
-        remove(file_path)
+    if Path(path).is_file():
+        remove(path)
     return {
         'message': 'Музыка с id {} удалена'.format(music_id)
     }
