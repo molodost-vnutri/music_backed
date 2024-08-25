@@ -16,3 +16,6 @@ class SJWTChangeEmail(SJWTBase):
 
 class SJWTChangeEmailModerator(SJWTChangeEmail, SJWTCurrentUser):
     pass
+
+class SJWTChangePassword(SJWTCreateFirst):
+    pass

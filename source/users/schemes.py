@@ -76,11 +76,6 @@ class SUserChangePassword(BaseModel):
 class SUserChangeEmail(BaseModel):
     new_email: EmailStr
 
-
-class SUserForgotPassword(BaseModel):
-    email: EmailStr
-
-
 class SUserChangeForgotPassword(BaseModel):
     new_password: str
 
@@ -100,6 +95,9 @@ class SUserChangeForgotPassword(BaseModel):
             raise PasswordCharException
         return v
 
+
+class SUserForgotPassword(SUserChangeForgotPassword):
+    email: EmailStr
 
 class SChangeUsername(BaseModel):
     username: str

@@ -1,5 +1,5 @@
 from source.Core import BaseJWT
-from source.jwt.schemes import SJWTCreateFirst, SJWTCurrentUser, SJWTChangeEmail, SJWTChangeEmailModerator
+from source.jwt.schemes import SJWTCreateFirst, SJWTCurrentUser, SJWTChangeEmail, SJWTChangeEmailModerator, SJWTChangePassword
 
 
 class JWTCreateFirst(BaseJWT[SJWTCreateFirst]):
@@ -28,3 +28,6 @@ class JWTChangePassword(JWTChangeEmailSecond):
 
 class JWTChangeEmailModerator(JWTChangeEmailSecond):
     scheme_validator = SJWTChangeEmailModerator
+
+class JWTChangePassword(BaseJWT[SJWTChangePassword]):
+    scheme_validator = SJWTChangePassword

@@ -8,6 +8,6 @@ SEND_FIRST_CHANGE_EMAIL = '''Вы действительно хотите сме
 
 SEND_SECOND_CHANGE_EMAIL = '''Ваша ссылка на смену почты http://{}/profile/change/email/second/{}'''
 
-SEND_FORGOT_PASSWORD_USER = '''Ваша ссылка на сброс пароля http://{}/profile/forgot/{}'''
+SEND_FORGOT_PASSWORD_USER = '''Ваша ссылка на сброс пароля http://{}/profile/forgot/password/{}'''
 
 SEND_FORGOT_EMAIL = '''Ваша ссылка на изменение почты http://{}/profile/change/moderation/{}'''
