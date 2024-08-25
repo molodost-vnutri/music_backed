@@ -1,10 +1,18 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, PositiveInt
 
 class SJWTBase(BaseModel):
     exp: float
 
 class SJWTCurrentUser(SJWTBase):
-    sub: int
+    sub: PositiveInt
 
-class SJWTCreateUserFirst(SJWTBase):
+class SJWTCreateFirst(SJWTBase):
     email: EmailStr
+    session: str
+
+class SJWTChangeEmail(SJWTBase):
+    email: EmailStr
+
+
+class SJWTChangeEmailModerator(SJWTChangeEmail, SJWTCurrentUser):
+    pass

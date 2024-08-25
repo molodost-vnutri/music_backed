@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 
 PasswordUpperCaseException = HTTPException(
     status_code=400,
@@ -101,9 +102,29 @@ EmailNotFoundException = HTTPException(
     detail='Почта не зарегистрирована'
 )
 
-UserNotFoundException = HTTPException(
+EmailAlreadyUsedException = HTTPException(
+    status_code=409,
+    detail='Нельзя указать ту же почту которая у вас подтверждена'
+)
+
+UserNotFound = JSONResponse(
     status_code=404,
-    detail='Пользователь удалён'
+    content={'message': 'Пользователь не найден'}
+)
+
+UserBanned = JSONResponse(
+    status_code=403,
+    content={'message': 'Пользователь забанен'}
+)
+
+UserNotAuthException = HTTPException(
+    status_code=400,
+    detail='Вы не авторизованы'
+)
+
+UserNotExistException = HTTPException(
+    status_code=400,
+    detail='Пользователь с данным id не найден'
 )
 
 UserAlreadyAuthException = HTTPException(
@@ -119,4 +140,29 @@ MusicNotFoundException = HTTPException(
 MusicAlreadyAddException = HTTPException(
     status_code=409,
     detail='Данная музыка у вас уже добавлена'
+)
+
+ModeratorNotBannedHeException = HTTPException(
+    status_code=400,
+    detail='Модератор не может забанить себя'
+)
+
+ModeratorNotUnbannedHeException = HTTPException(
+    status_code=400,
+    detail='Модератор не может разбанить себя'
+)
+
+NotHavePermissionException = HTTPException(
+    status_code=400,
+    detail='Недостаточно прав'
+)
+
+UserBannedException = HTTPException(
+    status_code=403,
+    detail='Пользователь забанен'
+)
+
+FilterEmptyException = HTTPException(
+    status_code=400,
+    detail='query параметр не может быть пустым'
 )

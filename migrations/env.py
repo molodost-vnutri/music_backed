@@ -12,8 +12,10 @@ from alembic import context
 
 from source.settings import settings
 from source.database import Base
-from source.users.models import UserModel, UserRolesModel, RoleModel, UserMusicsModel
-from source.music.models import MusicGenreModel, MusicModel, GenreModel, MusicEndModel
+from source.users.models import UserModel as _
+from source.binders_models import UserMusicsModel as _, UserRolesModel as _, MusicGenresModel as _
+from source.musics.models import MusicModel as _, GenreModel as _
+
 
 config = context.config
 

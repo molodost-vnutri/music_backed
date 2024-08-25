@@ -1,26 +1,25 @@
 from typing import List, Optional
 from re import search
 
-from pydantic import BaseModel, field_validator, EmailStr
+from pydantic import BaseModel, field_validator, EmailStr, PositiveInt
 
 from source.exceptions import (
     PasswordLowerCaseException,
     PasswordCharException,
     PasswordLengthException,
+    PasswordNotAsciiException,
     PasswordNumException,
     PasswordUpperCaseException,
-    PasswordNotAsciiException
-
 )
 
-class SUserAuth(BaseModel):
+
+class SUserAuthIn(BaseModel):
     email: EmailStr
     password: str
 
+
 class SUserCreateFirst(BaseModel):
     email: EmailStr
-
-class SUserCreateSecond(BaseModel):
     password: str
 
     @field_validator('password')
@@ -39,14 +38,19 @@ class SUserCreateSecond(BaseModel):
             raise PasswordCharException
         return v
 
-class SUserInformation(BaseModel):
-    roles: List
-    username: Optional[str]
+
+class SUserAuthOut(BaseModel):
+    username: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     email: EmailStr
     created_at: str
     updated_at: str
+    roles: List[str]
+    
     class Config:
-        from_attributes = True
+        from_atributes = True
+
 
 class SUserChangePassword(BaseModel):
     old_password: str
@@ -67,16 +71,19 @@ class SUserChangePassword(BaseModel):
         if not search(r'\W', v):
             raise PasswordCharException
         return v
-    
+
+
 class SUserChangeEmail(BaseModel):
     new_email: EmailStr
 
-class SUserForgotPassword(SUserCreateFirst):
-    pass
+
+class SUserForgotPassword(BaseModel):
+    email: EmailStr
+
 
 class SUserChangeForgotPassword(BaseModel):
     new_password: str
-    
+
     @field_validator('new_password')
     def validation_passwords(cls, v: str) -> str:
         if not v.isascii():
@@ -92,3 +99,39 @@ class SUserChangeForgotPassword(BaseModel):
         if not search(r'\W', v):
             raise PasswordCharException
         return v
+
+
+class SChangeUsername(BaseModel):
+    username: str
+
+
+class SChangeFi(BaseModel):
+    first_name: Optional[str]
+    last_name: Optional[str]
+
+
+class SBannedUser(BaseModel):
+    user_id: PositiveInt
+
+
+class SUnbannedUser(SBannedUser):
+    pass
+
+class SChangePasswordModerator(SBannedUser):
+    pass
+
+class SChangeEmailModerator(SUserForgotPassword, SBannedUser):
+    pass
+
+class SUserModeratorOut(BaseModel):
+    id: PositiveInt
+    email: EmailStr
+    username: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    created_at: str
+    updated_at: str
+    banned: bool
+
+    class Config:
+        from_atributes = True
