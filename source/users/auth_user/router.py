@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, Depends
 
 from source.users.auth_user.service import auth_current_user, forgot_password, change_password
-from source.users.services.dependencies import check_auth_user, logout_user, get_current_user
+from source.users.services.dependencies import check_auth_user, logout_user
 from source.users.schemes import SUserAuthIn, SUserForgotPassword
 router = APIRouter(
     prefix='/profile',
