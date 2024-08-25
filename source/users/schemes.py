@@ -133,3 +133,10 @@ class SUserModeratorOut(BaseModel):
 
     class Config:
         from_atributes = True
+
+
+SUserRoles: dict[int, str] = {
+    'пользователь': 1,
+    'модератор': 2,
+    'администратор': 3
+}

@@ -45,14 +45,14 @@ async def change_email_step_one_router(request: SUserChangeEmail, user_id = Depe
     return await change_email_first(request=request, user_id=user_id)
 
 
-@router.get('/change/email/second/{}', status_code=200)
+@router.get('/change/email/second/{}', status_code=200, include_in_schema=False)
 async def change_email_step_two_router(token: str, user_id = Depends(get_current_user)):
     if not isinstance(user_id, int):
         return user_id
     return await change_email_second(token)
 
 
-@router.get('/change/email/last/{}', status_code=200)
+@router.get('/change/email/last/{}', status_code=200, include_in_schema=False)
 async def change_email_step_three_router(token: str, user_id = Depends(get_current_user)):
     if not isinstance(user_id, int):
         return user_id

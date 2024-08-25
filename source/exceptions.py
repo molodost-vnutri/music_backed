@@ -171,3 +171,18 @@ ModeratorNotDeleteSelfException = HTTPException(
     status_code=400,
     detail='Модератор не может удалить себя'
 )
+
+RoleNotFoundException = HTTPException(
+    status_code=404,
+    detail='Роль не найдена'
+)
+
+RoleAlreadyAddException = HTTPException(
+    status_code=409,
+    detail='Роль уже добавлена'
+)
+
+UserNotFoundException = HTTPException(
+    status_code=404,
+    detail={'message': 'Пользователь не найден'}
+)

@@ -7,7 +7,7 @@ from source.database import async_session
 from source.users.schemes import SUserAuthOut, SUserModeratorOut
 from source.Core import BaseCRUD
 from source.users.models import UserModel
-from source.exceptions import RollbackException
+from source.exceptions import RollbackException, RoleNotFoundException, RoleAlreadyAddException
 
 class UserCRUD(BaseCRUD):
     model = UserModel
@@ -82,13 +82,14 @@ class UserCRUD(BaseCRUD):
     async def get_all_roles_id(cls, model_id: PositiveInt):
         async with async_session() as session:
             query =  text('''
-                SELECT array_agg(role_id) AS role_ids
-                FROM user_roles
-                WHERE user_id = :user_id;
+                SELECT array_agg(json_build_array(ur.role_id, r.role)) AS role_ids
+                FROM user_roles ur
+                JOIN roles r ON ur.role_id = r.id
+                WHERE ur.user_id = :user_id;
             ''')
             result = await session.execute(query, {'user_id': model_id})
-            return result.fetchone()[0]
-    
+            return result.mappings().fetchall()
+        
     @staticmethod
     async def get_all_users():
         async with async_session() as session:
@@ -121,3 +122,50 @@ class UserCRUD(BaseCRUD):
             ]
 
             return users_list
+    
+    @staticmethod
+    async def get_all_roles():
+        async with async_session() as session:
+            query = text('''
+                        SELECT id, role
+                        FROM roles
+                         ''')
+            result = await session.execute(query)
+            return [(role[0], role[1]) for role in result.fetchall()]
+    
+    @staticmethod
+    async def add_role(user_id: int, role_id: int):
+        async with async_session() as session:
+            query = text('''SELECT (user_id, role_id)
+                         FROM user_roles
+                         WHERE user_id = :user_id
+                         AND role_id = :role_id
+                         ''')
+            exist = await session.execute(query, {'user_id': user_id, 'role_id': role_id})
+            result = exist.scalar_one_or_none()
+            if result:
+                raise RoleAlreadyAddException
+            query = text('''INSERT INTO user_roles (user_id, role_id) VALUES (:user_id, :role_id);''')
+            await session.execute(query, {'user_id': user_id, 'role_id': role_id})
+            await session.commit()
+    
+    @staticmethod
+    async def delete_role(user_id: int, role_id: int):
+        async with async_session() as session:
+            query = text('''
+            SELECT (user_id, role_id)
+            FROM user_roles
+            WHERE user_id = :user_id
+            AND role_id = :role_id
+            ''')
+            result = await session.execute(query, {'user_id': user_id, 'role_id': role_id})
+            exist = result.scalar_one_or_none()
+            if not exist:
+                raise RoleNotFoundException
+            query = text('''
+                DELETE FROM user_roles
+                WHERE user_id = :user_id
+                AND role_id = :role_id
+            ''')
+            await session.execute(query, {'user_id': user_id, 'role_id': role_id})
+            await session.commit()

@@ -51,11 +51,13 @@ async def check_current_depend(token = Depends(get_token)):
         raise NotFoundException
     return user_id
 
-async def check_admin_depend(token = Depends(get_current_user)):
+async def check_admin_depend(token = Depends(get_token)):
     if not token:
         raise NotFoundException
     user_id = JWTCurrentUser.decode_token(token).sub
     user_roles: List[PositiveInt] = await UserCRUD.get_all_roles_id(model_id=user_id)
-    if not any(3 == role for role in user_roles):
-        raise NotFoundException
-    return user_id
+    for _, value in user_roles[0].items():
+        for role_id, _ in value:
+            if role_id == 3:
+                return user_id
+    raise NotFoundException
